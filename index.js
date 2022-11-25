@@ -30,6 +30,16 @@ async function run() {
 
 
 
+    // Load category products for dynamic route
+    app.get('/products/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { category_id: id }
+      const result = await bikesCollection.find(query).toArray()
+      res.send(result)
+    })
+
+
+
     // Save User Info by Post Method
     app.post('/users', async (req, res) => {
       const user = req.body;
