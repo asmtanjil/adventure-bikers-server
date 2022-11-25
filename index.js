@@ -15,6 +15,18 @@ console.log(uri)
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
 
+async function run() {
+  try {
+    const usersCollection = client.db('adventureBiker').collection('users');
+    const categoriesCollection = client.db('adventureBiker').collection('categories');
+    const bikesCollection = client.db('adventureBiker').collection('bikes');
+
+  }
+  finally {
+
+  }
+}
+
 
 app.get('/', (req, res) => {
   res.send("Bike Server is Running")
