@@ -38,15 +38,13 @@ async function run() {
     })
 
 
-
     // Load category products for dynamic route
-    app.get('/products/:id', async (req, res) => {
-      const id = req.params.id;
-      const query = { category_id: id }
+    app.get('/products/:type', async (req, res) => {
+      const type = req.params.type;
+      const query = { bikeType: type }
       const result = await productsCollection.find(query).toArray()
       res.send(result)
     })
-
 
 
     // Save User Info by Post Method
@@ -57,7 +55,33 @@ async function run() {
     })
 
 
-    // Save Booking data by user into Orders Collection
+    // Load All Seller
+    app.get('/users/:role', async (req, res) => {
+      const role = req.params.role;
+      const query = { role: role }
+      const result = await usersCollection.find(query).toArray()
+      res.send(result)
+    })
+
+
+    app.get('/users/admin/:email', async (req, res) => {
+      const email = req.params.email;
+      const query = { email }
+      const user = await usersCollection.findOne(query)
+      res.send({ isAdmin: user?.role === 'admin' })
+    })
+
+
+
+    app.get('/users/seller/:email', async (req, res) => {
+      const email = req.params.email;
+      const query = { email }
+      const user = await usersCollection.findOne(query)
+      res.send({ isSeller: user?.role === 'seller' })
+    })
+
+
+    // Save Booking data by user into bookings Collection
     app.post('/bookings', async (req, res) => {
       const order = req.body;
       const result = await ordersCollection.insertOne(order)
@@ -67,10 +91,13 @@ async function run() {
 
     // Get Booking Data from Database and send it to client
     app.get('/bookings', async (req, res) => {
-      const query = {}
+      const email = req.query.email
+      const query = { email: email }
       const result = await ordersCollection.find(query).toArray()
       res.send(result)
     })
+
+
   }
   finally {
 
