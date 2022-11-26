@@ -58,7 +58,11 @@ async function run() {
 
 
     // Get Booking Data from Database and send it to client
-
+    app.get('/orders', async (req, res) => {
+      const query = {}
+      const result = await ordersCollection.find(query).toArray()
+      res.send(result)
+    })
   }
   finally {
 
