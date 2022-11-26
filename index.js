@@ -19,7 +19,7 @@ async function run() {
     const usersCollection = client.db('adventureBiker').collection('users');
     const categoriesCollection = client.db('adventureBiker').collection('category');
     const productsCollection = client.db('adventureBiker').collection('products');
-    const ordersCollection = client.db('adventureBiker').collection('orders');
+    const ordersCollection = client.db('adventureBiker').collection('bookings');
 
 
     // Load category Items for Home Page
@@ -27,6 +27,14 @@ async function run() {
       const query = {}
       const categories = await categoriesCollection.find(query).toArray()
       res.send(categories)
+    })
+
+
+    // Add product from client and store to db
+    app.post('/products', async (req, res) => {
+      const product = req.body;
+      const result = await productsCollection.insertOne(product)
+      res.send(result)
     })
 
 
@@ -50,7 +58,7 @@ async function run() {
 
 
     // Save Booking data by user into Orders Collection
-    app.post('/orders', async (req, res) => {
+    app.post('/bookings', async (req, res) => {
       const order = req.body;
       const result = await ordersCollection.insertOne(order)
       res.send(result)
@@ -58,7 +66,7 @@ async function run() {
 
 
     // Get Booking Data from Database and send it to client
-    app.get('/orders', async (req, res) => {
+    app.get('/bookings', async (req, res) => {
       const query = {}
       const result = await ordersCollection.find(query).toArray()
       res.send(result)
