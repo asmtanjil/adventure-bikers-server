@@ -18,10 +18,11 @@ async function run() {
   try {
     const usersCollection = client.db('adventureBiker').collection('users');
     const categoriesCollection = client.db('adventureBiker').collection('category');
-    const bikesCollection = client.db('adventureBiker').collection('bikes');
+    const productsCollection = client.db('adventureBiker').collection('products');
+    const ordersCollection = client.db('adventureBiker').collection('orders');
 
 
-    // Load category Items
+    // Load category Items for Home Page
     app.get('/categories', async (req, res) => {
       const query = {}
       const categories = await categoriesCollection.find(query).toArray()
@@ -34,7 +35,7 @@ async function run() {
     app.get('/products/:id', async (req, res) => {
       const id = req.params.id;
       const query = { category_id: id }
-      const result = await bikesCollection.find(query).toArray()
+      const result = await productsCollection.find(query).toArray()
       res.send(result)
     })
 
@@ -46,6 +47,17 @@ async function run() {
       const result = await usersCollection.insertOne(user);
       res.send(result)
     })
+
+
+    // Save Booking data by user into Orders Collection
+    app.post('/orders', async (req, res) => {
+      const order = req.body;
+      const result = await ordersCollection.insertOne(order)
+      res.send(result)
+    })
+
+
+    // Get Booking Data from Database and send it to client
 
   }
   finally {
