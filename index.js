@@ -49,6 +49,15 @@ async function run() {
     })
 
 
+    // Delete my product by a seller
+    app.delete('/myProducts/:id', async (req, res) => {
+      const id = req.params.id
+      const filter = { _id: ObjectId(id) }
+      const result = await productsCollection.deleteOne(filter)
+      res.send(result)
+    })
+
+
     // Load category products for dynamic route
     app.get('/products/:type', async (req, res) => {
       const type = req.params.type;
@@ -66,16 +75,8 @@ async function run() {
     })
 
 
-    // // Delete Buyer
-    // app.delete('/buyers/:id', async (req, res) => {
-    //   const id = req.params.id
-    //   const filter = { _id: ObjectId(id) }
-    //   const result = await usersCollection.deleteOne(filter)
-    //   res.send(result)
-    // })
 
-
-    // Delete Buyer
+    // Delete Buyer and Seller
     app.delete('/users/:id', async (req, res) => {
       const id = req.params.id
       const filter = { _id: ObjectId(id) }
@@ -83,14 +84,6 @@ async function run() {
       res.send(result)
     })
 
-
-    // Delete seller
-    app.delete('/sellers/:id', async (req, res) => {
-      const id = req.params.id
-      const filter = { _id: ObjectId(id) }
-      const result = await usersCollection.deleteOne(filter)
-      res.send(result)
-    })
 
 
     // Load All Seller and Buyer 
