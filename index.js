@@ -2,12 +2,15 @@ const express = require('express');
 const cors = require('cors');
 const app = express()
 require('dotenv').config()
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const port = process.env.PORT || 5000;
+
+
 
 // Middle Wares
 app.use(cors())
 app.use(express.json())
+
 
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.aes3u62.mongodb.net/?retryWrites=true&w=majority`;
@@ -38,6 +41,14 @@ async function run() {
     })
 
 
+    app.get('/products', async (req, res) => {
+      const email = req.query.email;
+      const query = { email: email }
+      const result = await productsCollection.find(query).toArray()
+      res.send(result)
+    })
+
+
     // Load category products for dynamic route
     app.get('/products/:type', async (req, res) => {
       const type = req.params.type;
@@ -55,7 +66,34 @@ async function run() {
     })
 
 
-    // Load All Seller
+    // // Delete Buyer
+    // app.delete('/buyers/:id', async (req, res) => {
+    //   const id = req.params.id
+    //   const filter = { _id: ObjectId(id) }
+    //   const result = await usersCollection.deleteOne(filter)
+    //   res.send(result)
+    // })
+
+
+    // Delete Buyer
+    app.delete('/users/:id', async (req, res) => {
+      const id = req.params.id
+      const filter = { _id: ObjectId(id) }
+      const result = await usersCollection.deleteOne(filter)
+      res.send(result)
+    })
+
+
+    // Delete seller
+    app.delete('/sellers/:id', async (req, res) => {
+      const id = req.params.id
+      const filter = { _id: ObjectId(id) }
+      const result = await usersCollection.deleteOne(filter)
+      res.send(result)
+    })
+
+
+    // Load All Seller and Buyer 
     app.get('/users/:role', async (req, res) => {
       const role = req.params.role;
       const query = { role: role }
@@ -63,7 +101,7 @@ async function run() {
       res.send(result)
     })
 
-
+    // API for Admin
     app.get('/users/admin/:email', async (req, res) => {
       const email = req.params.email;
       const query = { email }
@@ -72,7 +110,7 @@ async function run() {
     })
 
 
-
+    // API for Seller
     app.get('/users/seller/:email', async (req, res) => {
       const email = req.params.email;
       const query = { email }
