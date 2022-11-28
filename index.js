@@ -23,6 +23,7 @@ async function run() {
     const categoriesCollection = client.db('adventureBiker').collection('category');
     const productsCollection = client.db('adventureBiker').collection('products');
     const ordersCollection = client.db('adventureBiker').collection('bookings');
+    const reportsCollection = client.db('adventureBiker').collection('reports');
 
 
     // Load category Items for Home Page
@@ -63,6 +64,31 @@ async function run() {
       const type = req.params.type;
       const query = { bikeType: type }
       const result = await productsCollection.find(query).toArray()
+      res.send(result)
+    })
+
+
+    //report to admin
+    app.post('/reports', async (req, res) => {
+      const reportData = req.body;
+      const result = await reportsCollection.insertOne(reportData)
+      res.send(result)
+    })
+
+
+    // get reported data and send to client
+    app.get('/reportedProducts', async (req, res) => {
+      const query = {}
+      const result = await reportsCollection.find(query).toArray()
+      res.send(result)
+    })
+
+
+    // Delete product from Reported Products
+    app.delete('/reportedProducts/:id', async (req, res) => {
+      const id = req.params.id
+      const filter = { _id: ObjectId(id) }
+      const result = await reportsCollection.deleteOne(filter)
       res.send(result)
     })
 
@@ -112,7 +138,7 @@ async function run() {
       res.send(result)
     })
 
-    // API for Buyer
+    // API for Buyer Route
     app.get('/users/buyer/:email', async (req, res) => {
       const email = req.params.email;
       const query = { email }
@@ -121,7 +147,7 @@ async function run() {
     })
 
 
-    // API for Admin
+    // API for Admin Route
     app.get('/users/admin/:email', async (req, res) => {
       const email = req.params.email;
       const query = { email }
@@ -130,7 +156,7 @@ async function run() {
     })
 
 
-    // API for Seller
+    // API for Seller Route
     app.get('/users/seller/:email', async (req, res) => {
       const email = req.params.email;
       const query = { email }
