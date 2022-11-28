@@ -91,7 +91,7 @@ async function run() {
       const options = { upsert: true };
       const updatedDoc = {
         $set: {
-          isVerified: true
+          isVerified: 'true'
         }
       }
 
@@ -99,7 +99,7 @@ async function run() {
 
       const updateProduct = await productsCollection.updateMany(filter, updatedDoc, options)
 
-      res.send(result, updateProduct)
+      res.send(result)
     })
 
 
